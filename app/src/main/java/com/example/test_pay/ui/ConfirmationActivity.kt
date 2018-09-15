@@ -1,12 +1,16 @@
-package com.example.test_pay
+package com.example.test_pay.ui
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test_pay.R
+import com.example.test_pay.TestPayApplication
 import com.example.test_pay.util.TestPayUtils
+import javax.inject.Inject
 
 class ConfirmationActivity : AppCompatActivity() {
 
+    @Inject
     lateinit var testPayUtils: TestPayUtils
 
     lateinit var confirmAmount : TextView
@@ -14,9 +18,12 @@ class ConfirmationActivity : AppCompatActivity() {
     lateinit var confirmCardType : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as TestPayApplication)
+            .appComponent
+            .inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmation)
-        testPayUtils = TestPayUtils()
 
         initializeViews()
 

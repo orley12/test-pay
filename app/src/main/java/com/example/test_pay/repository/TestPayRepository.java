@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-import com.example.test_pay.ConfirmationActivity;
+
+import com.example.test_pay.annotation.ActivityScope;
+import com.example.test_pay.ui.ConfirmationActivity;
 import com.example.test_pay.service.ServiceBuilder;
 import com.example.test_pay.service.TestPayService;
 import com.example.test_pay.util.TestPayUtils;
 import java.io.IOException;
+
+import javax.inject.Inject;
+
 import co.paystack.android.Paystack;
 import co.paystack.android.PaystackSdk;
 import co.paystack.android.Transaction;
@@ -19,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@ActivityScope
 public class TestPayRepository {
 
     private static String TAG = TestPayRepository.class.getSimpleName();
@@ -27,12 +33,13 @@ public class TestPayRepository {
 
     private TestPayService testPayService;
 
-    private TestPayUtils testPayUtils;
+    @Inject
+    TestPayUtils testPayUtils;
 
+    @Inject
     public TestPayRepository(Activity activity) {
         this.activity = activity;
         testPayService = ServiceBuilder.buildService(TestPayService.class);
-        testPayUtils = new TestPayUtils();
     }
 
     public void verifyTransaction(String reference, Charge chargeDetails, String cardType) {

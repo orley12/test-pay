@@ -1,4 +1,4 @@
-package com.example.test_pay
+package com.example.test_pay.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,12 +8,17 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import co.paystack.android.model.Card
+import com.example.test_pay.R
+import com.example.test_pay.TestPayApplication
 import com.example.test_pay.util.TestPayUtils
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
+    @Inject
     lateinit var testPayUtils : TestPayUtils
 
+    @Inject
     lateinit var testPayRepository : TestPayRepository
 
     lateinit var makeNewPayment : Button
@@ -25,14 +30,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var amount : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val mainActivityComponent = (application as TestPayApplication)
+            .appComponent
+            .mainActivityComponent()
+            .create(this)
+
+        mainActivityComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         PaystackSdk.initialize(applicationContext)
-
-        testPayRepository = TestPayRepository(this)
-
-        testPayUtils = TestPayUtils();
 
         initializeViews()
 

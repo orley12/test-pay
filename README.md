@@ -19,6 +19,8 @@ clicking the green play icon run button
 ### Use the following as Card details, an actual card maybe declined.
 - Card Number : ``5060666666666666666`` no spacing.
 - CVC Number : ``123``
+- PIN Number : ``1234``
+- OTP Number :  ``123456``
 - Expiry Year : ``21`` any future year will do but ``two`` digits
 - Expiry Month : ``11`` any future month will do but ``two`` digits
 - Email : you can use your email just to be sure transaction was successful, you will get a mail

@@ -4,10 +4,17 @@ import android.app.Activity;
 import android.widget.Toast;
 import org.json.JSONException;
 import java.util.Calendar;
+
+import javax.inject.Inject;
+
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 
 public class TestPayUtils {
+
+    @Inject
+    public TestPayUtils() {
+    }
 
     public String validateCardDetails(Card card) {
         String validationMessage = null;

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".TestPayApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ConfirmationActivity"
+            android:name=".ui.ConfirmationActivity"
             android:label="@string/title_activity_confirmation"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
@@ -20,7 +21,7 @@
             android:name="co.paystack.android.PublicKey"
             android:value="pk_test_5245c5dfda6c95f1e3d5b2fcbddb4bf1ee3bd972" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
