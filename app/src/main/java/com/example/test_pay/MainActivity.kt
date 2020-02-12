@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var cvc : EditText
     lateinit var email : EditText
     lateinit var amount : EditText
-    lateinit var makePaymentAgain : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         cvc = findViewById<EditText>(R.id.cvc)
         email = findViewById<EditText>(R.id.email)
         amount = findViewById<EditText>(R.id.amount)
-        makePaymentAgain = findViewById<Button>(R.id.make_payment_again)
     }
 
     private fun generateCardFromDetails(): Card {

@@ -10,14 +10,14 @@
         android:id="@+id/make_new_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:text="Make New Payment"
+        android:layout_marginTop="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/make_payment_again"
+        app:layout_constraintEnd_toEndOf="@+id/amount"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/make_payment_again"
-        app:layout_constraintTop_toBottomOf="@+id/make_payment_again"
+        app:layout_constraintStart_toStartOf="@+id/amount"
+        app:layout_constraintTop_toBottomOf="@+id/amount"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
@@ -87,16 +87,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/cvc"
         app:layout_constraintTop_toBottomOf="@+id/cvc" />
-
-    <Button
-        android:id="@+id/make_payment_again"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Make Payment Again"
-        app:layout_constraintEnd_toEndOf="@+id/amount"
-        app:layout_constraintStart_toStartOf="@+id/amount"
-        app:layout_constraintTop_toBottomOf="@+id/amount" />
 
     <EditText
         android:id="@+id/amount"
