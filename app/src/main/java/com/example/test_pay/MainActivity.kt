@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         val testPayRepository = TestPayRepository(this)
 
-//        testPayRepository.initializeTransaction()
-
         initializeViews()
 
         makeNewPayment.setOnClickListener(View.OnClickListener {
@@ -38,14 +36,6 @@ class MainActivity : AppCompatActivity() {
             val amount = amount.text.trim().toString().toInt()
             testPayRepository.initiateCardCharge(card, email, amount)
         })
-    }
-
-    private fun generateCardFromDetails(): Card {
-        val cardNumber: String = cardNumber.text.trim().toString()
-        val expiryMonth: Int = expiryMonth.text.trim().toString().toInt()
-        val expiryYear : Int = expiryYear.text.trim().toString().toInt()
-        val cvc : String = cvc.text.trim().toString()
-        return Card(cardNumber, expiryMonth, expiryYear, cvc);
     }
 
     private fun initializeViews() {
@@ -57,6 +47,14 @@ class MainActivity : AppCompatActivity() {
         email = findViewById<EditText>(R.id.email)
         amount = findViewById<EditText>(R.id.amount)
         makePaymentAgain = findViewById<Button>(R.id.make_payment_again)
+    }
+
+    private fun generateCardFromDetails(): Card {
+        val cardNumber: String = cardNumber.text.trim().toString()
+        val expiryMonth: Int = expiryMonth.text.trim().toString().toInt()
+        val expiryYear : Int = expiryYear.text.trim().toString().toInt()
+        val cvc : String = cvc.text.trim().toString()
+        return Card(cardNumber, expiryMonth, expiryYear, cvc);
     }
 
 }

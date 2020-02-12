@@ -1,22 +1,46 @@
 package com.example.test_pay
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-import kotlinx.android.synthetic.main.activity_confirmation.*
-
 class ConfirmationActivity : AppCompatActivity() {
+
+    lateinit var confirmAmount : TextView
+    lateinit var confirmEmail : TextView
+    lateinit var confirmCardType : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmation)
-        setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        initializeViews()
+
+        val (amount, cardType, email) = getBundle()
+
+
+
+        setTextOnViews(amount, email, cardType)
+
     }
 
+    private fun setTextOnViews(amount: String?, email: String?, cardType: String?) {
+        confirmAmount.text = "Amount : $amount"
+        confirmEmail.text = "Email: $email"
+        confirmCardType.text = "Card: $cardType"
+    }
+
+    private fun initializeViews() {
+        confirmAmount = findViewById(R.id.confirm_amount)
+        confirmEmail = findViewById(R.id.confirm_email)
+        confirmCardType = findViewById(R.id.card_type)
+    }
+
+    private fun getBundle(): Triple<String?, String?, String?> {
+        val bundle = intent.getBundleExtra("bundle")
+        val amount: String = bundle.get("amount").toString()
+        val cardType: String = bundle.get("cardType").toString()
+        val email: String = bundle.get("email").toString()
+        return Triple(amount, cardType, email)
+    }
 }

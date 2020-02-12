@@ -1,8 +1,10 @@
 package com.example.test_pay.repository;
 
 import android.app.Activity;
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
+import com.example.test_pay.ConfirmationActivity;
 import com.example.test_pay.service.ServiceBuilder;
 import com.example.test_pay.service.TestPayService;
 import com.example.test_pay.util.TestPayUtils;
@@ -10,7 +12,6 @@ import java.io.IOException;
 import co.paystack.android.Paystack;
 import co.paystack.android.PaystackSdk;
 import co.paystack.android.Transaction;
-import co.paystack.android.exceptions.ExpiredAccessCodeException;
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 import okhttp3.ResponseBody;
@@ -34,37 +35,44 @@ public class TestPayRepository {
         testPayUtils = new TestPayUtils();
     }
 
-    public void initializeTransaction() {
+    public void verifyTransaction(String reference, Charge chargeDetails, String cardType) {
 
-        Call<String> call = testPayService.initializeTransaction();
-        call.enqueue(new Callback<String>() {
+        Call<ResponseBody> call = testPayService.verifyTransaction(reference);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String accessCode = response.body();
-                Toast.makeText(activity, accessCode, Toast.LENGTH_LONG)
-                        .show();
-
-                Card card = new Card("5060666666666666666", 11, 21, "123");
-                String cardDetails = testPayUtils.validateCardDetails(card);
-                Log.d(TAG, "onResponse: cardDetails " + cardDetails);
-
-                String cardType = card.getType();
-                Log.d(TAG, "onResponse: cardType " + cardType);
-
-                Charge chargeDetails = testPayUtils.generateChargeDetails(card, accessCode, null, 0);
-                performCharge(chargeDetails);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                assert response.body() != null;
+                try {
+                    String ref = (response.body().string());
+                    startConfirmationActivity(cardType, chargeDetails);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
-                generateErrorToast(t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
         });
-
     }
 
-    private void performCharge(Charge chargeDetails) {
+    public void initiateCardCharge(Card card, String email, int amount) {
+
+        String validationResult = testPayUtils.validateCardDetails(card);
+
+        if (validationResult != null) {
+            testPayUtils.generateErrorToast(activity, validationResult);
+            return;
+        }
+
+        String cardType = card.getType();
+
+        Charge chargeDetails = testPayUtils.generateChargeDetails(card, null, email, amount);
+
+        performCharge(chargeDetails, cardType);
+    }
+
+    private void performCharge(Charge chargeDetails, String cardType) {
         PaystackSdk.chargeCard(activity, chargeDetails, new Paystack.TransactionCallback() {
             @Override
             public void onSuccess(Transaction transaction) {
@@ -72,9 +80,8 @@ public class TestPayRepository {
                 // Retrieve the transaction, and send its reference to your server
                 // for verification.
                 String paymentReference = transaction.getReference();
-                Log.d(TAG, "onResponse: called: ");
-                Log.d(TAG, "onResponse: paymentReference: " + paymentReference);
-                verifyTransaction(paymentReference);
+
+                verifyTransaction(paymentReference, chargeDetails, cardType);
             }
 
             @Override
@@ -89,61 +96,28 @@ public class TestPayRepository {
             @Override
             public void onError(Throwable error, Transaction transaction) {
                 //handle error here
-                if (error instanceof ExpiredAccessCodeException) {
-                    Toast.makeText(activity, error.getMessage(), Toast.LENGTH_LONG).show();
-                    return;
-                }
                 if (transaction.getReference() != null) {
-                    Toast.makeText(activity, transaction.getReference() +
+                    testPayUtils.generateErrorToast(activity, transaction.getReference() +
                             " concluded with error: " +
-                            error.getMessage(), Toast.LENGTH_LONG).show();
+                            error.getMessage());
                 } else {
-                    Toast.makeText(activity, error.getMessage(), Toast.LENGTH_LONG).show();
+                    testPayUtils.generateErrorToast(activity, error.getMessage());
                 }
             }
         });
     }
 
-    public void verifyTransaction(String reference) {
+    private void startConfirmationActivity(String cardType, Charge chargeDetails) {
+        Bundle bundle = new Bundle();
+        bundle.putString("cardType", cardType);
+        bundle.putString("email", chargeDetails.getEmail());
+        bundle.putString("amount", String.valueOf(chargeDetails.getAmount()));
 
-        Call<ResponseBody> call = testPayService.verifyTransaction(reference);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                assert response.body() != null;
-                try {
-                    String ref = (response.body().string());
-                    Log.d(TAG, "onResponse: Transaction Successful! payment reference: " + ref);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        Intent intentConfirmationActivity = new Intent(activity, ConfirmationActivity.class);
+        intentConfirmationActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intentConfirmationActivity.putExtra("bundle", bundle);
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(TAG, "onResponse: Transaction Successful! payment reference: " + t.getMessage());
-            }
-        });
-    }
-
-    public void initiateCardCharge(Card card, String email, int amount) {
-//        Card card = new Card("5060666666666666666", 11, 21, "123");
-        String validationResult = testPayUtils.validateCardDetails(card);
-        if (validationResult != null) {
-            generateErrorToast(validationResult);
-            Log.d(TAG, "onResponse: validationResult " + validationResult);
-            return;
-        }
-
-        String cardType = card.getType();
-        Log.d(TAG, "onResponse: cardType " + cardType);
-
-        Charge chargeDetails = testPayUtils.generateChargeDetails(card, null, email, amount);
-        performCharge(chargeDetails);
-    }
-
-    private void generateErrorToast (String message){
-        Toast.makeText(activity, message, Toast.LENGTH_LONG)
-                .show();
+        activity.getApplicationContext()
+                .startActivity(intentConfirmationActivity);
     }
 }

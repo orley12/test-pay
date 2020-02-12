@@ -1,9 +1,9 @@
 package com.example.test_pay.util;
 
+import android.app.Activity;
+import android.widget.Toast;
 import org.json.JSONException;
-
 import java.util.Calendar;
-
 import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 
@@ -27,11 +27,11 @@ public class TestPayUtils {
     public Charge generateChargeDetails(Card card, String accessCode, String email, int amount) {
         Charge charge = new Charge();
         charge.setCard(card);
-        charge.setEmail(email); //dummy email address
+        charge.setEmail(email); //email address
         charge.setAmount(amount); //test amount
         charge.setReference("ChargedFromAndroid_" + Calendar.getInstance().getTimeInMillis());
         if (accessCode != null) {
-            charge.setAccessCode(accessCode);
+            charge.setAccessCode(accessCode); // null : this will be null except we start this transaction from our backend
         }
         try {
             charge.putCustomField("Charged From", "Android SDK");
@@ -39,5 +39,10 @@ public class TestPayUtils {
             e.printStackTrace();
         }
         return charge;
+    }
+
+    public void generateErrorToast (Activity activity, String message){
+        Toast.makeText(activity, message, Toast.LENGTH_LONG)
+                .show();
     }
 }

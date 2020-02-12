@@ -1,12 +1,8 @@
 package com.example.test_pay.service;
 
 import android.util.Log;
-
-import com.example.test_pay.repository.TestPayRepository;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
