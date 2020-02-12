@@ -3,8 +3,11 @@ package com.example.test_pay
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test_pay.util.TestPayUtils
 
 class ConfirmationActivity : AppCompatActivity() {
+
+    lateinit var testPayUtils: TestPayUtils
 
     lateinit var confirmAmount : TextView
     lateinit var confirmEmail : TextView
@@ -13,21 +16,22 @@ class ConfirmationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmation)
+        testPayUtils = TestPayUtils()
 
         initializeViews()
 
         val (amount, cardType, email) = getBundle()
 
-
-
         setTextOnViews(amount, email, cardType)
 
+        testPayUtils.
+            generateErrorToast(this, "Please check your email for confirmation")
     }
 
     private fun setTextOnViews(amount: String?, email: String?, cardType: String?) {
         confirmAmount.text = "Amount : $amount"
-        confirmEmail.text = "Email: $email"
-        confirmCardType.text = "Card: $cardType"
+        confirmEmail.text = "Email : $email"
+        confirmCardType.text = "Card : $cardType"
     }
 
     private fun initializeViews() {
