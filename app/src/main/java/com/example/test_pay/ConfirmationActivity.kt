@@ -28,8 +28,8 @@ class ConfirmationActivity : AppCompatActivity() {
             generateErrorToast(this, "Please check your email for confirmation")
     }
 
-    private fun setTextOnViews(amount: String?, email: String?, cardType: String?) {
-        confirmAmount.text = "Amount : $amount"
+    private fun setTextOnViews(amount: Int, email: String?, cardType: String?) {
+        confirmAmount.text = "Amount : ${amount / 100}"
         confirmEmail.text = "Email : $email"
         confirmCardType.text = "Card : $cardType"
     }
@@ -40,9 +40,9 @@ class ConfirmationActivity : AppCompatActivity() {
         confirmCardType = findViewById(R.id.card_type)
     }
 
-    private fun getBundle(): Triple<String?, String?, String?> {
+    private fun getBundle(): Triple<Int, String, String> {
         val bundle = intent.getBundleExtra("bundle")
-        val amount: String = bundle.get("amount").toString()
+        val amount: Int = bundle.get("amount").toString().toInt()
         val cardType: String = bundle.get("cardType").toString()
         val email: String = bundle.get("email").toString()
         return Triple(amount, cardType, email)

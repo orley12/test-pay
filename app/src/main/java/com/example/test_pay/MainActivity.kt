@@ -8,8 +8,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import co.paystack.android.model.Card
+import com.example.test_pay.util.TestPayUtils
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var testPayUtils : TestPayUtils
+
+    lateinit var testPayRepository : TestPayRepository
 
     lateinit var makeNewPayment : Button
     lateinit var cardNumber : EditText
@@ -25,15 +30,14 @@ class MainActivity : AppCompatActivity() {
 
         PaystackSdk.initialize(applicationContext)
 
-        val testPayRepository = TestPayRepository(this)
+        testPayRepository = TestPayRepository(this)
+
+        testPayUtils = TestPayUtils();
 
         initializeViews()
 
         makeNewPayment.setOnClickListener(View.OnClickListener {
-            val card : Card = generateCardFromDetails()
-            val email : String = email.text.trim().toString()
-            val amount = amount.text.trim().toString().toInt()
-            testPayRepository.initiateCardCharge(card, email, amount)
+            makePayment()
         })
     }
 
@@ -46,6 +50,38 @@ class MainActivity : AppCompatActivity() {
         email = findViewById<EditText>(R.id.email)
         amount = findViewById<EditText>(R.id.amount)
     }
+
+    private fun makePayment() {
+        var card: Card? = null
+        var email : String? = null
+        var amount : Int = 0
+
+        try {
+        card = generateCardFromDetails()
+        email = this.email.text.trim().toString()
+        amount = this.amount.text.trim().toString().toInt()
+
+        validateInput(email, amount, card)
+        } catch (e: Exception) {
+            testPayUtils.generateErrorToast(this, "No field can be empty")
+            return
+        }
+
+        testPayRepository.initiateCardCharge(card, email, amount)
+    }
+
+    private fun validateInput(email: String, amount: Int, card: Card) {
+        if (email.length < 1 ||
+                amount < 1 ||
+                card.number.length < 1 ||
+                card.cvc.length < 1 ||
+                card.expiryMonth < 1 ||
+                card.expiryYear < 1) {
+            throw Exception("No field can be empty")
+        }
+        return
+    }
+
 
     private fun generateCardFromDetails(): Card {
         val cardNumber: String = cardNumber.text.trim().toString()
