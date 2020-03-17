@@ -1,5 +1,8 @@
 # test-pay
 
+### Resources
+- [``Download APK her``](https://github.com/orley12/test-pay/raw/master/apk/app-debug.apk)
+
 ### What does this Application does?
 Test-pay is a simple app that simulates a payment flow using the Paystack Plaform.
 
@@ -9,6 +12,7 @@ Java
 Kotlin
 XML
 Retrofit
+Dagger
 
 ### How should this be manually tested?
 Clone this repository Open the project in android studio, while you are connected to the internet
