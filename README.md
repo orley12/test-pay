@@ -1,7 +1,7 @@
 # test-pay
 
 ### Resources
-- [``Download APK her``](https://github.com/orley12/test-pay/raw/master/apk/app-debug.apk)
+- [``Download APK here``](https://github.com/orley12/test-pay/raw/master/apk/app-debug.apk)
 
 ### What does this Application does?
 Test-pay is a simple app that simulates a payment flow using the Paystack Plaform.
